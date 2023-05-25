@@ -70,3 +70,25 @@ Enter Target (phone number, citizen id, e-wallet id):
 EOF
     );
 });
+
+it('should error when target is null after answer target with empty', function () {
+    $application = new Application();
+    $application->add(
+        $command = new CreateQrCode()
+    );
+    $application->setAutoExit(false);
+
+    $tester = new ApplicationTester($application);
+
+    $tester->setInputs(['']);
+
+    $tester->run([
+        'command' => $command->getName(),
+    ]);
+
+    expect($tester->getDisplay())->toContain(
+        <<<'EOF'
+Please enter receiver target., e.g. 0899999999
+EOF
+    );
+});
