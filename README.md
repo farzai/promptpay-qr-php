@@ -22,11 +22,24 @@ You can install the package globally via composer:
 ```bash
 composer global require farzai/promptpay
 ```
-Make sure to place Composer's system-wide vendor bin directory in your $PATH so the promptpay executable can be located by your system. This directory exists in different locations based on your operating system; however, some common locations include:
+Make sure to place Composer's system-wide vendor bin directory in your $PATH so the promptpay executable can be located by your system. 
+This directory exists in different locations based on your operating system;
+however, some common locations include:
 
+
+For macOS
 ```
-macOS: $HOME/.composer/vendor/bin
+$HOME/.composer/vendor/bin
+```
+
+For GNU / Linux Distributions
+```
 GNU / Linux Distributions: $HOME/.config/composer/vendor/bin
+```
+
+For Windows
+```
+%USERPROFILE%\AppData\Roaming\Composer\vendor\bin
 ```
 
 ## Usage

@@ -33,9 +33,9 @@ it('can render qr code as base64', function () {
 it('can generate qr code and save to file', function () {
     $qrCode = new QrCode('00020101021129370016A000000677010111011300668999999995802TH53037646304FE29');
 
-    $qrCode->save(__DIR__.'/../qrcode.png');
+    $qrCode->save('qrcode.png');
 
-    expect(file_exists(__DIR__.'/../qrcode.png'))->toBeTrue();
+    expect(file_exists('qrcode.png'))->toBeTrue();
 
-    @unlink(__DIR__.'/../qrcode.png');
+    unlink('qrcode.png');
 });
