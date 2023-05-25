@@ -16,13 +16,35 @@ it('can generate qr code', function () {
     $tester->run([
         'command' => $command->getName(),
         'target' => '0899999999',
-        '--amount' => '100',
     ]);
 
     expect($tester->getDisplay())->toContain(
         <<<'EOF'
 QR Code PromptPay for: 0899999999
 ====================================
+EOF
+    );
+});
+
+it('should see amount if amount is not null', function () {
+    $application = new Application();
+    $application->add(
+        $command = new CreateQrCode()
+    );
+    $application->setAutoExit(false);
+
+    $tester = new ApplicationTester($application);
+
+    $tester->run([
+        'command' => $command->getName(),
+        'target' => '0899999999',
+        '--amount' => 100,
+    ]);
+
+    expect($tester->getDisplay())->toContain(
+        <<<'EOF'
+QR Code PromptPay for: 0899999999
+Amount: 100.00
 EOF
     );
 });

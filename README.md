@@ -5,9 +5,42 @@
 [![codecov](https://codecov.io/gh/farzai/promptpay-qr-php/branch/main/graph/badge.svg)](https://codecov.io/gh/farzai/promptpay-qr-php)
 [![Total Downloads](https://img.shields.io/packagist/dt/farzai/promptpay.svg?style=flat-square)](https://packagist.org/packages/farzai/promptpay)
 
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
+This library that allows you to create PromptPay QR codes. 
+You can generate a QR code for receiving payments through PromptPay, which is a popular payment method in Thailand.
 
-## Installation
+
+## Requirements
+
+- PHP 8.0 or higher
+
+## Installation (For CLI)
+![Example CLI](assets/promptpay-qr-cli.png)
+
+
+You can install the package globally via composer:
+
+```bash
+composer global require farzai/promptpay
+```
+Make sure to place Composer's system-wide vendor bin directory in your $PATH so the promptpay executable can be located by your system. This directory exists in different locations based on your operating system; however, some common locations include:
+
+```
+macOS: $HOME/.composer/vendor/bin
+GNU / Linux Distributions: $HOME/.config/composer/vendor/bin
+```
+
+## Usage
+```bash
+promptpay 0988888888 --amount 100
+```
+
+
+---
+
+
+## Installation (For PHP Application)
+
+![Example](assets/promptpay-qr.png)
 
 You can install the package via composer:
 
@@ -18,10 +51,12 @@ composer require farzai/promptpay
 ## Usage
 
 ```php
-$generator = new Farzai\PromptPay\Generator();
+use Farzai\PromptPay\Generator;
+
+$generator = new Generator();
 
 $qrCode = $generator->generate(
-    target: "0812345678", 
+    target: "098-888-8888", 
     amount: 100
 );
 

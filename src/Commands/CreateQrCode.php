@@ -35,8 +35,16 @@ class CreateQrCode extends Command
             );
         }
 
-        $output->writeln([
+        $lines = [
             "QR Code PromptPay for: {$target}",
+        ];
+
+        if ($amount) {
+            $lines[] = 'Amount: '.number_format($amount, 2);
+        }
+
+        $output->writeln([
+            ...$lines,
             '====================================',
             '',
         ]);
