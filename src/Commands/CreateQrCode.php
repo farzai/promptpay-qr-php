@@ -33,6 +33,12 @@ class CreateQrCode extends Command
                 $input,
                 $output
             );
+
+            if (! $target) {
+                $output->writeln('Please enter receiver target., e.g. 0899999999');
+
+                return Command::FAILURE;
+            }
         }
 
         $lines = [
