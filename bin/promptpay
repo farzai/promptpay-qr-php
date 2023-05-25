@@ -1,0 +1,17 @@
+#!/usr/bin/env php
+
+<?php
+
+require_once __DIR__ . '/../vendor/autoload.php';
+
+use Symfony\Component\Console\Application;
+use Farzai\PromptPay\Commands\CreateQrCode;
+
+$application = new Application();
+$application->add(
+    $command = new CreateQrCode()
+);
+
+$application
+    ->setDefaultCommand($command->getName(), true)
+    ->run();
