@@ -52,6 +52,9 @@ class QrCode implements Contract
             ->getDataUri();
     }
 
+    /**
+     * Convert qr to png
+     */
     public function asPng(): string
     {
         return $this->createBuilder()
@@ -88,17 +91,20 @@ class QrCode implements Contract
         );
     }
 
-    public function __toString()
-    {
-        return $this->payload;
-    }
-
+    /**
+     * Create builder
+     */
     private function createBuilder(): BuilderInterface
     {
         return Builder::create()
             ->writer(new PngWriter())
             ->data($this->payload)
-            ->size(500)
+            ->size(100)
             ->margin(0);
+    }
+
+    public function __toString()
+    {
+        return $this->payload;
     }
 }
