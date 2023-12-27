@@ -8,7 +8,7 @@ use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\Writer\ConsoleWriter;
 use Endroid\QrCode\Writer\PngWriter;
 use Farzai\PromptPay\Contracts\QrCode as Contract;
-use Nyholm\Psr7\Response;
+use GuzzleHttp\Psr7\Response;
 use Psr\Http\Message\ResponseInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
