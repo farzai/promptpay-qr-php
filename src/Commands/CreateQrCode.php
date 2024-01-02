@@ -12,7 +12,7 @@ use Symfony\Component\Console\Question\Question;
 
 class CreateQrCode extends Command
 {
-    protected static $defaultName = 'farzai:promptpay:create-qr-code';
+    protected static $defaultName = 'create-qr-code';
 
     protected function configure()
     {
