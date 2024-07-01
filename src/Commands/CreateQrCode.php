@@ -11,17 +11,16 @@ use Symfony\Component\Console\Question\Question;
 
 class CreateQrCode extends Command
 {
-    protected static $defaultName = 'create-qr-code';
-
     protected function configure()
     {
         $this
+            ->setName('create-qr-code')
             ->setDescription('Create QR Code PromptPay for receive')
             ->addArgument('target', InputArgument::OPTIONAL, 'Target (phone number, citizen id, e-wallet id)')
             ->addArgument('amount', InputArgument::OPTIONAL, 'Amount to receive');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $target = $input->getArgument('target');
         $amount = $input->getArgument('amount') ?? null;
