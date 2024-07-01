@@ -1,7 +1,7 @@
 # PromptPay QR Code Generator - PHP
 
 
-![Example](assets/promptpay-qr.png)
+![Example](assets/example.png)
 
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/farzai/promptpay.svg?style=flat-square)](https://packagist.org/packages/farzai/promptpay)
 [![Tests](https://img.shields.io/github/actions/workflow/status/farzai/promptpay-qr-php/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/farzai/promptpay-qr-php/actions/workflows/run-tests.yml)
