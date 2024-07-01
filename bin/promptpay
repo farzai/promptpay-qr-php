@@ -9,6 +9,7 @@ if (file_exists(__DIR__.'/../../../autoload.php')) {
 
 
 $application = new Symfony\Component\Console\Application();
+
 $application->add(
     $command = new Farzai\PromptPay\Commands\CreateQrCode()
 );

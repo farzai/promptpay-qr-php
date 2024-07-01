@@ -2,30 +2,28 @@
 
 namespace Farzai\PromptPay\Commands;
 
-use Farzai\PromptPay\Generator;
+use Farzai\PromptPay\PromptPay;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
 class CreateQrCode extends Command
 {
-    protected static $defaultName = 'farzai:promptpay:create-qr-code';
-
     protected function configure()
     {
         $this
+            ->setName('create-qr-code')
             ->setDescription('Create QR Code PromptPay for receive')
             ->addArgument('target', InputArgument::OPTIONAL, 'Target (phone number, citizen id, e-wallet id)')
-            ->addOption('amount', 'a', InputOption::VALUE_OPTIONAL, 'Amount (optional)');
+            ->addArgument('amount', InputArgument::OPTIONAL, 'Amount to receive');
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $target = $input->getArgument('target');
-        $amount = $input->getOption('amount') ?? null;
+        $amount = $input->getArgument('amount') ?? null;
 
         if (! $target) {
             $target = $this->ask(
@@ -51,15 +49,13 @@ class CreateQrCode extends Command
 
         $output->writeln([
             ...$lines,
-            '====================================',
+            '==============================================',
             '',
         ]);
 
-        $generator = new Generator();
-
-        $generator
-            ->generate($target, $amount)
-            ->asConsole($output);
+        PromptPay::to($target)
+            ->amount($amount)
+            ->toConsole($output);
 
         return Command::SUCCESS;
     }

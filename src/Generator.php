@@ -17,12 +17,20 @@ class Generator
     }
 
     /**
-     * @param  int|float  $amount
+     * Generate qr code
      */
-    public function generate(string $target, $amount = null): QrCodeContract
+    public function generate(string $recipient, $amount = null): QrCodeContract
     {
+        // Remove non-numeric characters
+        $recipient = preg_replace('/\D/', '', $recipient);
+
+        // Validate target
+        if (! preg_match('/^[0-9]{10,15}$/', $recipient)) {
+            throw new \InvalidArgumentException('Invalid recipient, must be 10-15 digits');
+        }
+
         $payload = $this->payloadGenerator->generate(
-            $target, $amount,
+            $recipient, $amount,
         );
 
         return new QrCode($payload);
