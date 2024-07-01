@@ -26,6 +26,8 @@ class FilesystemOutput extends AbstractOutput
             ->margin(0)
             ->build();
 
-        return $qrCode->saveToFile($this->path);
+        $qrCode->saveToFile($this->path);
+
+        return $this->path;
     }
 }

@@ -26,6 +26,8 @@ class ConsoleOutput implements OutputInterface
             ->encoding(new Encoding('UTF-8'))
             ->build();
 
-        return $this->output->writeln($qrCode->getString());
+        $this->output->writeln($result = $qrCode->getString());
+
+        return $result;
     }
 }
