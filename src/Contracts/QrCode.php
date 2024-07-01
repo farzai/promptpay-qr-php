@@ -2,38 +2,15 @@
 
 namespace Farzai\PromptPay\Contracts;
 
-use Psr\Http\Message\ResponseInterface as PsrResponseInterface;
-use Symfony\Component\Console\Output\OutputInterface;
-
 interface QrCode
 {
     /**
-     * Write qr code to file
+     * Write qr code to output
      */
-    public function save(string $path): void;
+    public function writeTo(OutputInterface $output): mixed;
 
     /**
-     * Convert qr to data uri
+     * Get qr code payload
      */
-    public function asDataUri(): string;
-
-    /**
-     * Convert qr to base64
-     */
-    public function asBase64(): string;
-
-    /**
-     * Convert qr to png
-     */
-    public function asPng(): string;
-
-    /**
-     * Convert qr to response
-     */
-    public function toPsrResponse(): PsrResponseInterface;
-
-    /**
-     * Convert qr to console
-     */
-    public function asConsole(OutputInterface $output): void;
+    public function __toString(): string;
 }
