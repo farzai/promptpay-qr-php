@@ -11,6 +11,10 @@ beforeEach(function () {
     $this->qrCode = new QrCode('00020101021129370016A000000677010111011300668999999995802TH53037646304FE29');
 });
 
+it('should throw error if not found writer', function () {
+    $this->qrCode->writeTo(new DataUriOutput('jpg'));
+})->throws(Exception::class, 'Unsupported format: jpg, supported formats are: svg, png, pdf, gif.');
+
 it('can render qr code as psr response', function () {
     $response = $this->qrCode->writeTo(new HttpResponseOutput);
 
