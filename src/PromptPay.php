@@ -70,7 +70,7 @@ class PromptPay
      */
     public function respond(): ResponseInterface
     {
-        return $this->build()->writeTo(new Outputs\HttpResponseOutput());
+        return $this->build()->writeTo(new Outputs\HttpResponseOutput);
     }
 
     /**
@@ -85,6 +85,6 @@ class PromptPay
         private string $recipient,
         private $amount = null
     ) {
-        $this->generator = new Generator();
+        $this->generator = new Generator;
     }
 }

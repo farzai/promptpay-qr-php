@@ -12,7 +12,7 @@ class Generator
     public function __construct()
     {
         $this->payloadGenerator = new PayloadGenerator(
-            new CRC16CCITTAlgorithm()
+            new CRC16CCITTAlgorithm
         );
     }
 

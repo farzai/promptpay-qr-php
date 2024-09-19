@@ -22,7 +22,7 @@ class ConsoleOutput implements OutputInterface
             ->data($payload)
             ->size(100)
             ->margin(0)
-            ->writer(new ConsoleWriter())
+            ->writer(new ConsoleWriter)
             ->encoding(new Encoding('UTF-8'))
             ->build();
 

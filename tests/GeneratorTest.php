@@ -3,7 +3,7 @@
 use Farzai\PromptPay\Generator;
 
 beforeEach(function () {
-    $this->generator = new Generator();
+    $this->generator = new Generator;
 });
 
 it('cannot generate qr code when target is empty', function () {

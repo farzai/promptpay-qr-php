@@ -5,9 +5,9 @@ use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Tester\ApplicationTester;
 
 beforeEach(function () {
-    $this->application = new Application();
+    $this->application = new Application;
     $this->application->add(
-        $this->command = new CreateQrCode()
+        $this->command = new CreateQrCode
     );
     $this->application->setAutoExit(false);
 
