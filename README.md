@@ -74,14 +74,11 @@ For example, to generate a QR code for receiving 100 THB from the phone number 0
 
 ```php
 use Farzai\PromptPay\PromptPay;
-use Farzai\PromptPay\Outputs\FilesystemOutput;
 
-// Generate a QR code for receiving 100 THB from the phone number 0988888888
-$imageUri = PromptPay::to('0988888888')
-	->amount(100)
-	->toDataUri('png');
+$qrCode = PromptPay::create('0988888888', 100);
 
-// Display the QR code
+$imageUri = $qrCode->toDataUri('png');
+
 echo '<img src="' . $imageUri . '" />';
 ```
 
@@ -89,11 +86,10 @@ Or you can save the QR code to a file:
 
 ```php
 use Farzai\PromptPay\PromptPay;
-use Farzai\PromptPay\Outputs\FilesystemOutput;
 
-$imagePath = PromptPay::to('0988888888')
-	->amount(100)
-	->toFile('qr-code.png');
+$qrCode = PromptPay::create('0988888888', 100):
+
+$imagePath = $qrCode->toFile('qr-code.png');
 
 echo 'QR code saved to ' . $imagePath;
 ```

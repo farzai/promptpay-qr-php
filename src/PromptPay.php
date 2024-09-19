@@ -15,7 +15,7 @@ class PromptPay
      */
     public static function create(string $recipient, $amount = null): QrCode
     {
-        return static::to($recipient)->amount($amount)->build();
+        return (new self($recipient, $amount))->build();
     }
 
     /**
