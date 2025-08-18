@@ -2,6 +2,19 @@
 
 All notable changes to `PromptPay` will be documented in this file.
 
+## 2.1.0 - 2025-08-18
+
+### What's Changed
+
+* Update dependencies symfony/console, We have affect for laravel framework  by @zenepay in https://github.com/farzai/promptpay-qr-php/pull/25
+
+### New Contributors
+
+* @imgbot[bot] made their first contribution in https://github.com/farzai/promptpay-qr-php/pull/15
+* @zenepay made their first contribution in https://github.com/farzai/promptpay-qr-php/pull/25
+
+**Full Changelog**: https://github.com/farzai/promptpay-qr-php/compare/2.0.0...2.1.0
+
 ## 2.0.0 - 2024-07-01
 
 ### What's Changed
