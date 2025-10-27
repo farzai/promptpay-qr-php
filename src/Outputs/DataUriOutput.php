@@ -1,21 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Farzai\PromptPay\Outputs;
 
-use Endroid\QrCode\Builder\Builder;
+use Farzai\PromptPay\Contracts\QrCodeBuilder;
+use Farzai\PromptPay\Enums\QrFormat;
 
 class DataUriOutput extends AbstractOutput
 {
-    public function __construct(private string $format = 'png') {}
+    public function __construct(
+        QrCodeBuilder $qrCodeBuilder,
+        private readonly QrFormat $format
+    ) {
+        parent::__construct($qrCodeBuilder);
+    }
 
-    public function write(string $payload): mixed
+    public function write(string $payload): string
     {
-        $qrCode = Builder::create()
-            ->writer($this->createWriter($this->format))
-            ->data($payload)
-            ->size(100)
-            ->margin(0)
-            ->build();
+        $qrCode = $this->qrCodeBuilder->build($payload, $this->format);
 
         return $qrCode->getDataUri();
     }

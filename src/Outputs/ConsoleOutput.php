@@ -1,32 +1,34 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Farzai\PromptPay\Outputs;
 
-use Endroid\QrCode\Builder\Builder;
-use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\Writer\ConsoleWriter;
-use Endroid\QrCode\Writer\SvgWriter;
 use Farzai\PromptPay\Contracts\OutputInterface;
+use Farzai\PromptPay\Contracts\QrCodeBuilder;
+use Farzai\PromptPay\Enums\QrFormat;
 use Symfony\Component\Console\Output\OutputInterface as SymfonyOutputInterface;
 
+/**
+ * Console Output - Displays QR codes in terminal
+ *
+ * Uses the QrCodeBuilder abstraction for consistency.
+ * Note: Console format is a specialized format that renders ASCII art.
+ */
 class ConsoleOutput implements OutputInterface
 {
     public function __construct(
-        private SymfonyOutputInterface $output
+        private readonly QrCodeBuilder $qrCodeBuilder,
+        private readonly SymfonyOutputInterface $output
     ) {}
 
-    public function write(string $payload): mixed
+    public function write(string $payload): string
     {
-        $qrCode = Builder::create()
-            ->writer(new SvgWriter)
-            ->data($payload)
-            ->size(100)
-            ->margin(0)
-            ->writer(new ConsoleWriter)
-            ->encoding(new Encoding('UTF-8'))
-            ->build();
+        // Build QR code with console-specific format (ASCII art)
+        $qrCode = $this->qrCodeBuilder->build($payload, QrFormat::CONSOLE);
 
-        $this->output->writeln($result = $qrCode->getString());
+        $result = $qrCode->getString();
+        $this->output->writeln($result);
 
         return $result;
     }

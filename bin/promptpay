@@ -1,12 +1,24 @@
 #!/usr/bin/env php
 <?php
 
+/**
+ * PromptPay QR Code CLI
+ *
+ * This CLI tool generates PromptPay QR codes for Thai payment systems.
+ */
+
+// Suppress deprecation warnings from vendor libraries
+// These warnings are from the endroid/qr-code library (v5.x) when running on PHP 8.4+
+// The warnings are related to implicit nullable type declarations in the vendor code
+// Since we can't modify vendor code and need to maintain PHP 8.1 compatibility,
+// we suppress these specific deprecation warnings at the application entry point
+error_reporting(E_ALL & ~E_DEPRECATED);
+
 if (file_exists(__DIR__.'/../../../autoload.php')) {
     require __DIR__.'/../../../autoload.php';
 } else {
     require __DIR__.'/../vendor/autoload.php';
 }
-
 
 $application = new Symfony\Component\Console\Application();
 

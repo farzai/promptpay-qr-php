@@ -1,37 +1,28 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Farzai\PromptPay;
 
+use Farzai\PromptPay\Contracts\Generator as GeneratorContract;
 use Farzai\PromptPay\Contracts\PayloadGenerator as PayloadGeneratorContract;
 use Farzai\PromptPay\Contracts\QrCode as QrCodeContract;
 
-class Generator
+class Generator implements GeneratorContract
 {
-    private PayloadGeneratorContract $payloadGenerator;
-
-    public function __construct()
-    {
-        $this->payloadGenerator = new PayloadGenerator(
-            new CRC16CCITTAlgorithm
-        );
-    }
+    public function __construct(
+        private readonly PayloadGeneratorContract $payloadGenerator
+    ) {}
 
     /**
      * Generate qr code
+     *
+     * @param  int|float|null  $amount
      */
     public function generate(string $recipient, $amount = null): QrCodeContract
     {
-        // Remove non-numeric characters
-        $recipient = preg_replace('/\D/', '', $recipient);
-
-        // Validate target
-        if (! preg_match('/^[0-9]{10,15}$/', $recipient)) {
-            throw new \InvalidArgumentException('Invalid recipient, must be 10-15 digits');
-        }
-
-        $payload = $this->payloadGenerator->generate(
-            $recipient, $amount,
-        );
+        // Validation is now handled in Recipient value object
+        $payload = $this->payloadGenerator->generate($recipient, $amount);
 
         return new QrCode($payload);
     }

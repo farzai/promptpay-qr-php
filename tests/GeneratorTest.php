@@ -1,9 +1,9 @@
 <?php
 
-use Farzai\PromptPay\Generator;
+use Farzai\PromptPay\Factories\GeneratorFactory;
 
 beforeEach(function () {
-    $this->generator = new Generator;
+    $this->generator = GeneratorFactory::createDefault();
 });
 
 it('cannot generate qr code when target is empty', function () {

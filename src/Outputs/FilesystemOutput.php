@@ -1,30 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Farzai\PromptPay\Outputs;
 
-use Endroid\QrCode\Builder\Builder;
+use Farzai\PromptPay\Contracts\QrCodeBuilder;
+use Farzai\PromptPay\Enums\QrFormat;
+use Farzai\PromptPay\Exceptions\ConfigurationException;
 
 class FilesystemOutput extends AbstractOutput
 {
     public function __construct(
-        private string $path
-    ) {}
+        QrCodeBuilder $qrCodeBuilder,
+        private readonly string $path
+    ) {
+        parent::__construct($qrCodeBuilder);
+    }
 
-    public function write(string $payload): mixed
+    public function write(string $payload): string
     {
         // Get extension from path
         $extension = pathinfo($this->path, PATHINFO_EXTENSION);
 
         if (empty($extension)) {
-            throw new \Exception('Invalid path');
+            throw new ConfigurationException('Invalid path: no file extension found');
         }
 
-        $qrCode = Builder::create()
-            ->writer($this->createWriter($extension))
-            ->data($payload)
-            ->size(100)
-            ->margin(0)
-            ->build();
+        $format = QrFormat::fromString($extension);
+        $qrCode = $this->qrCodeBuilder->build($payload, $format);
 
         $qrCode->saveToFile($this->path);
 
