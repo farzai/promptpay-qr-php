@@ -46,7 +46,7 @@ class CreateQrCode extends Command
         ];
 
         if ($amount) {
-            $lines[] = 'Amount: '.number_format($amount, 2);
+            $lines[] = 'Amount: '.number_format((float) $amount, 2);
         }
 
         $output->writeln([
@@ -56,7 +56,7 @@ class CreateQrCode extends Command
         ]);
 
         PromptPay::to($target)
-            ->amount($amount)
+            ->amount($amount ? (float) $amount : null)
             ->toConsole($output);
 
         return Command::SUCCESS;

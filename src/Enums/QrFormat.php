@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Farzai\PromptPay\Enums;
 
+use Endroid\QrCode\Writer\ConsoleWriter;
 use Endroid\QrCode\Writer\GifWriter;
 use Endroid\QrCode\Writer\PdfWriter;
 use Endroid\QrCode\Writer\PngWriter;
@@ -19,6 +20,7 @@ enum QrFormat: string
     case PNG = 'png';
     case PDF = 'pdf';
     case GIF = 'gif';
+    case CONSOLE = 'console';
 
     /**
      * Get the writer class for this format
@@ -30,6 +32,7 @@ enum QrFormat: string
             self::PNG => PngWriter::class,
             self::PDF => PdfWriter::class,
             self::GIF => GifWriter::class,
+            self::CONSOLE => ConsoleWriter::class,
         };
     }
 
@@ -43,6 +46,7 @@ enum QrFormat: string
             self::PNG => new PngWriter,
             self::PDF => new PdfWriter,
             self::GIF => new GifWriter,
+            self::CONSOLE => new ConsoleWriter,
         };
     }
 

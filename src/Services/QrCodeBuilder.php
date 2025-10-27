@@ -6,14 +6,19 @@ namespace Farzai\PromptPay\Services;
 
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
-use Endroid\QrCode\Writer\Result\ResultInterface;
 use Farzai\PromptPay\Contracts\QrCodeBuilder as QrCodeBuilderContract;
 use Farzai\PromptPay\Enums\QrFormat;
 use Farzai\PromptPay\ValueObjects\QrCodeConfig;
+use Farzai\PromptPay\ValueObjects\QrCodeResult;
 
 /**
  * QR Code Builder Service - Centralized QR code generation
- * Eliminates code duplication across output classes
+ *
+ * Adapter implementation that wraps the Endroid QR Code library.
+ * This design allows for easy replacement of the underlying QR library
+ * without affecting the rest of the application.
+ *
+ * @see QrCodeResult For the vendor-agnostic result wrapper
  */
 final class QrCodeBuilder implements QrCodeBuilderContract
 {
@@ -29,16 +34,11 @@ final class QrCodeBuilder implements QrCodeBuilderContract
     /**
      * Build QR code with specified format and payload
      */
-    public function build(string $payload, QrFormat $format): ResultInterface
+    public function build(string $payload, QrFormat $format): QrCodeResult
     {
-        $builder = Builder::create()
-            ->writer($format->createWriter())
-            ->data($payload)
-            ->encoding(new Encoding($this->config->getEncoding()))
-            ->size($this->config->getSize())
-            ->margin($this->config->getMargin());
+        $vendorResult = $this->buildVendorResult($payload, $format, $this->config);
 
-        return $builder->build();
+        return QrCodeResult::fromVendorResult($vendorResult);
     }
 
     /**
@@ -48,15 +48,10 @@ final class QrCodeBuilder implements QrCodeBuilderContract
         string $payload,
         QrFormat $format,
         QrCodeConfig $customConfig
-    ): ResultInterface {
-        $builder = Builder::create()
-            ->writer($format->createWriter())
-            ->data($payload)
-            ->encoding(new Encoding($customConfig->getEncoding()))
-            ->size($customConfig->getSize())
-            ->margin($customConfig->getMargin());
+    ): QrCodeResult {
+        $vendorResult = $this->buildVendorResult($payload, $format, $customConfig);
 
-        return $builder->build();
+        return QrCodeResult::fromVendorResult($vendorResult);
     }
 
     /**
@@ -73,5 +68,25 @@ final class QrCodeBuilder implements QrCodeBuilderContract
     public function withConfig(QrCodeConfig $config): self
     {
         return new self($config);
+    }
+
+    /**
+     * Build QR code using the vendor library
+     *
+     * @internal This method encapsulates the vendor-specific logic
+     */
+    private function buildVendorResult(
+        string $payload,
+        QrFormat $format,
+        QrCodeConfig $config
+    ): \Endroid\QrCode\Writer\Result\ResultInterface {
+        $builder = Builder::create()
+            ->writer($format->createWriter())
+            ->data($payload)
+            ->encoding(new Encoding($config->getEncoding()))
+            ->size($config->getSize())
+            ->margin($config->getMargin());
+
+        return $builder->build();
     }
 }

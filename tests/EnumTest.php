@@ -137,12 +137,13 @@ describe('QrFormat Enum', function () {
             expect($values)->toContain('png');
             expect($values)->toContain('pdf');
             expect($values)->toContain('gif');
+            expect($values)->toContain('console');
         });
 
-        it('returns exactly 4 formats', function () {
+        it('returns exactly 5 formats', function () {
             $values = QrFormat::values();
 
-            expect(count($values))->toBe(4);
+            expect(count($values))->toBe(5);
         });
     });
 
@@ -161,6 +162,10 @@ describe('QrFormat Enum', function () {
 
         it('has correct string value for GIF', function () {
             expect(QrFormat::GIF->value)->toBe('gif');
+        });
+
+        it('has correct string value for CONSOLE', function () {
+            expect(QrFormat::CONSOLE->value)->toBe('console');
         });
     });
 });

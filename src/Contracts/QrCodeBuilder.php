@@ -4,16 +4,22 @@ declare(strict_types=1);
 
 namespace Farzai\PromptPay\Contracts;
 
-use Endroid\QrCode\Writer\Result\ResultInterface;
 use Farzai\PromptPay\Enums\QrFormat;
 use Farzai\PromptPay\ValueObjects\QrCodeConfig;
+use Farzai\PromptPay\ValueObjects\QrCodeResult;
 
+/**
+ * QR Code Builder Contract
+ *
+ * Defines the interface for QR code generation.
+ * This contract is vendor-agnostic and can be implemented with any QR code library.
+ */
 interface QrCodeBuilder
 {
     /**
      * Build QR code with specified format and payload
      */
-    public function build(string $payload, QrFormat $format): ResultInterface;
+    public function build(string $payload, QrFormat $format): QrCodeResult;
 
     /**
      * Build QR code with custom configuration
@@ -22,7 +28,7 @@ interface QrCodeBuilder
         string $payload,
         QrFormat $format,
         QrCodeConfig $customConfig
-    ): ResultInterface;
+    ): QrCodeResult;
 
     /**
      * Get current configuration
