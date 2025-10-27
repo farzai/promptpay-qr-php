@@ -22,8 +22,10 @@ it('can generate qr code', function () {
 
     expect($this->tester->getDisplay())->toContain(
         <<<'EOF'
-QR Code PromptPay for: 0899999999
-====================================
+PromptPay QR Code
+==============================================
+Recipient: 089-999-9999
+Type: Phone Number
 EOF
     );
 });
@@ -37,8 +39,9 @@ it('should see amount if amount is not null', function () {
 
     expect($this->tester->getDisplay())->toContain(
         <<<'EOF'
-QR Code PromptPay for: 0899999999
-Amount: 100.00
+Recipient: 089-999-9999
+Type: Phone Number
+Amount: 100.00 THB
 EOF
     );
 });
@@ -52,7 +55,7 @@ it('should ask target when target is null', function () {
 
     expect($this->tester->getDisplay())->toContain(
         <<<'EOF'
-Enter Target (phone number, citizen id, e-wallet id):
+Enter Target (phone number, tax ID, or e-wallet ID):
 EOF
     );
 });
@@ -66,7 +69,7 @@ it('should error when target is null after answer target with empty', function (
 
     expect($this->tester->getDisplay())->toContain(
         <<<'EOF'
-Please enter receiver target., e.g. 0899999999
+Please enter a receiver target, e.g., 0899999999
 EOF
     );
 });
