@@ -2,6 +2,16 @@
 
 All notable changes to `PromptPay` will be documented in this file.
 
+## 3.0.0 - 2025-10-27
+
+### Breaking changes
+
+* Feature: Add builder pattern API with comprehensive validation by @parsilver in https://github.com/farzai/promptpay-qr-php/pull/27
+* Include symfony/console 8.0
+* Breaking changes
+
+**Full Changelog**: https://github.com/farzai/promptpay-qr-php/compare/2.1.0...3.0.0
+
 ## 2.1.0 - 2025-08-18
 
 ### What's Changed
