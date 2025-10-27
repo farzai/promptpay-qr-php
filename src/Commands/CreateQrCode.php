@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Farzai\PromptPay\Commands;
 
 use Farzai\PromptPay\PromptPay;
@@ -11,7 +13,7 @@ use Symfony\Component\Console\Question\Question;
 
 class CreateQrCode extends Command
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('create-qr-code')
@@ -62,10 +64,8 @@ class CreateQrCode extends Command
 
     /**
      * Ask a question to the user.
-     *
-     * @return string
      */
-    private function ask(string $question, InputInterface $input, OutputInterface $output)
+    private function ask(string $question, InputInterface $input, OutputInterface $output): ?string
     {
         /** @var \Symfony\Component\Console\Helper\QuestionHelper $helper */
         $helper = $this->getHelper('question');

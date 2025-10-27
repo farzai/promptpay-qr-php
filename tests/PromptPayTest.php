@@ -18,7 +18,9 @@ it('should create qr code and display data uri', function () {
 
     $qrCode = PromptPay::create('0899999999', 100);
 
-    $png = $qrCode->writeTo(new \Farzai\PromptPay\Outputs\DataUriOutput('png'));
+    $factory = \Farzai\PromptPay\Factories\OutputFactory::create();
+    $output = $factory->createDataUriOutput('png');
+    $png = $qrCode->writeTo($output);
 
     expect($dataUri)->toBe($png);
 });
