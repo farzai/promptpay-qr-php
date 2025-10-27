@@ -11,11 +11,17 @@ class ConfigurationException extends PromptPayException
 {
     // Error codes
     public const CODE_SIZE_TOO_SMALL = 3001;
+
     public const CODE_SIZE_TOO_LARGE = 3002;
+
     public const CODE_MARGIN_TOO_SMALL = 3003;
+
     public const CODE_MARGIN_TOO_LARGE = 3004;
+
     public const CODE_INVALID_ENCODING = 3005;
+
     public const CODE_INVALID_PATH = 3006;
+
     public const CODE_MISSING_DEPENDENCY = 3007;
 
     public static function sizeTooSmall(int $size, int $min): self
@@ -67,7 +73,7 @@ class ConfigurationException extends PromptPayException
     }
 
     /**
-     * @param array<string> $validEncodings
+     * @param  array<string>  $validEncodings
      */
     public static function invalidEncoding(string $encoding, array $validEncodings): self
     {

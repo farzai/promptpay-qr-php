@@ -11,9 +11,13 @@ class InvalidAmountException extends PromptPayException
 {
     // Error codes
     public const CODE_NOT_NUMERIC = 2001;
+
     public const CODE_NEGATIVE = 2002;
+
     public const CODE_TOO_LARGE = 2003;
+
     public const CODE_ZERO = 2004;
+
     public const CODE_TOO_SMALL = 2005;
 
     public static function notNumeric(mixed $value): self

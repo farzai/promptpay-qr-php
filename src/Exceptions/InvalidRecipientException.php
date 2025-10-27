@@ -14,8 +14,11 @@ class InvalidRecipientException extends InvalidArgumentException
 {
     // Error codes
     public const CODE_EMPTY = 1001;
+
     public const CODE_NOT_NUMERIC = 1002;
+
     public const CODE_INVALID_LENGTH = 1003;
+
     public const CODE_EMPTY_AFTER_NORMALIZATION = 1004;
 
     public static function empty(): self
@@ -72,19 +75,19 @@ class InvalidRecipientException extends InvalidArgumentException
         ];
 
         if ($length < 10) {
-            return "Too short! " . implode("\n", $suggestions);
+            return 'Too short! '.implode("\n", $suggestions);
         }
 
         if ($length === 11 || $length === 12) {
-            return "Invalid length. " . implode("\n", $suggestions);
+            return 'Invalid length. '.implode("\n", $suggestions);
         }
 
         if ($length === 14) {
-            return "Close! Add one more digit for Tax ID (13) or E-Wallet ID (15).";
+            return 'Close! Add one more digit for Tax ID (13) or E-Wallet ID (15).';
         }
 
         if ($length > 15) {
-            return "Too long! Maximum is 15 digits for E-Wallet ID.";
+            return 'Too long! Maximum is 15 digits for E-Wallet ID.';
         }
 
         return implode("\n", $suggestions);

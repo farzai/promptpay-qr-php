@@ -13,9 +13,13 @@ use Farzai\PromptPay\Exceptions\InvalidRecipientException;
 final class RecipientValidator
 {
     private const MIN_LENGTH = 10;
+
     private const MAX_LENGTH = 15;
+
     private const PHONE_LENGTH = 10;
+
     private const TAX_ID_LENGTH = 13;
+
     private const EWALLET_LENGTH = 15;
 
     /**

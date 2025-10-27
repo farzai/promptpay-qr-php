@@ -67,8 +67,9 @@ final class OutputFactory
     /**
      * Create HTTP Response output
      *
-     * @param ResponseFactoryInterface|null $responseFactory PSR-17 response factory (required)
-     * @param StreamFactoryInterface|null $streamFactory PSR-17 stream factory (required)
+     * @param  ResponseFactoryInterface|null  $responseFactory  PSR-17 response factory (required)
+     * @param  StreamFactoryInterface|null  $streamFactory  PSR-17 stream factory (required)
+     *
      * @throws ConfigurationException If PSR-17 factories are not provided
      */
     public function createHttpResponseOutput(

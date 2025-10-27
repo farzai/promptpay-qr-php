@@ -17,7 +17,7 @@ it('should throw error if not found writer', function () {
 })->throws(UnsupportedFormatException::class, 'Unsupported format: jpg, supported formats are: svg, png, pdf, gif');
 
 it('can render qr code as psr response', function () {
-    $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
+    $psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory;
     $output = $this->factory->createHttpResponseOutput($psr17Factory, $psr17Factory);
     $response = $this->qrCode->writeTo($output);
 

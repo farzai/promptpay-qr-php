@@ -6,11 +6,11 @@
  * This example demonstrates comprehensive error handling with detailed error messages.
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
-use Farzai\PromptPay\PromptPay;
-use Farzai\PromptPay\Exceptions\InvalidRecipientException;
 use Farzai\PromptPay\Exceptions\InvalidAmountException;
+use Farzai\PromptPay\Exceptions\InvalidRecipientException;
+use Farzai\PromptPay\PromptPay;
 
 echo "=== Error Handling Examples ===\n\n";
 
@@ -20,8 +20,8 @@ try {
     PromptPay::qrCode('12345', 100)->build();
 } catch (InvalidRecipientException $e) {
     echo "   ✗ Error caught!\n";
-    echo "   Code: " . $e->getCode() . "\n";
-    echo "   Message: " . $e->getMessage() . "\n\n";
+    echo '   Code: '.$e->getCode()."\n";
+    echo '   Message: '.$e->getMessage()."\n\n";
 }
 
 // Example 2: Empty recipient
@@ -30,8 +30,8 @@ try {
     PromptPay::qrCode('', 100)->build();
 } catch (InvalidRecipientException $e) {
     echo "   ✗ Error caught!\n";
-    echo "   Code: " . $e->getCode() . "\n";
-    echo "   Message: " . $e->getMessage() . "\n\n";
+    echo '   Code: '.$e->getCode()."\n";
+    echo '   Message: '.$e->getMessage()."\n\n";
 }
 
 // Example 3: Negative amount
@@ -40,8 +40,8 @@ try {
     PromptPay::qrCode('0899999999', -50)->build();
 } catch (InvalidAmountException $e) {
     echo "   ✗ Error caught!\n";
-    echo "   Code: " . $e->getCode() . "\n";
-    echo "   Message: " . $e->getMessage() . "\n\n";
+    echo '   Code: '.$e->getCode()."\n";
+    echo '   Message: '.$e->getMessage()."\n\n";
 }
 
 // Example 4: Amount too large
@@ -50,8 +50,8 @@ try {
     PromptPay::qrCode('0899999999', 9999999999.99)->build();
 } catch (InvalidAmountException $e) {
     echo "   ✗ Error caught!\n";
-    echo "   Code: " . $e->getCode() . "\n";
-    echo "   Message: " . $e->getMessage() . "\n\n";
+    echo '   Code: '.$e->getCode()."\n";
+    echo '   Message: '.$e->getMessage()."\n\n";
 }
 
 // Example 5: Handling with error codes
@@ -76,7 +76,7 @@ try {
         default:
             echo "   → Unknown error\n";
     }
-    echo "   Full message: " . $e->getMessage() . "\n\n";
+    echo '   Full message: '.$e->getMessage()."\n\n";
 }
 
 // Example 6: Graceful degradation

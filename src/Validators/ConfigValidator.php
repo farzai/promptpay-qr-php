@@ -13,12 +13,17 @@ use Farzai\PromptPay\Exceptions\ConfigurationException;
 final class ConfigValidator
 {
     private const MIN_SIZE = 50;
+
     private const MAX_SIZE = 2000;
+
     private const RECOMMENDED_MIN_SIZE = 200;
+
     private const RECOMMENDED_MAX_SIZE = 1000;
 
     private const MIN_MARGIN = 0;
+
     private const MAX_MARGIN = 100;
+
     private const RECOMMENDED_MARGIN = 10;
 
     /**

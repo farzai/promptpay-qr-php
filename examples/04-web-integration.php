@@ -6,7 +6,7 @@
  * This example shows how to integrate PromptPay QR codes in web applications.
  */
 
-require __DIR__ . '/../vendor/autoload.php';
+require __DIR__.'/../vendor/autoload.php';
 
 use Farzai\PromptPay\PromptPay;
 
@@ -80,7 +80,7 @@ $amount = $_GET['amount'] ?? 100;
 
         <div class="form-group">
             <label>Amount (THB):</label><br>
-            <input type="number" name="amount" value="<?= htmlspecialchars((string)$amount) ?>" step="0.01" placeholder="100.00">
+            <input type="number" name="amount" value="<?= htmlspecialchars((string) $amount) ?>" step="0.01" placeholder="100.00">
         </div>
 
         <button type="submit">Generate QR Code</button>
@@ -89,7 +89,7 @@ $amount = $_GET['amount'] ?? 100;
     <?php
     try {
         // Generate QR code
-        $result = PromptPay::qrCode($recipient, (float)$amount)
+        $result = PromptPay::qrCode($recipient, (float) $amount)
             ->toDataUri('png');
         ?>
 
@@ -99,7 +99,7 @@ $amount = $_GET['amount'] ?? 100;
 
             <div class="info">
                 <strong>Recipient:</strong> <?= htmlspecialchars($recipient) ?><br>
-                <strong>Amount:</strong> <?= number_format((float)$amount, 2) ?> THB<br>
+                <strong>Amount:</strong> <?= number_format((float) $amount, 2) ?> THB<br>
                 <strong>Size:</strong> <?= number_format($result->getSize()) ?> bytes<br>
                 <strong>Format:</strong> <?= $result->getFormat()->value ?>
             </div>
@@ -117,7 +117,7 @@ $amount = $_GET['amount'] ?? 100;
         </div>
         <?php
     }
-    ?>
+?>
 
     <hr>
 

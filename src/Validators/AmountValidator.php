@@ -13,7 +13,9 @@ use Farzai\PromptPay\Exceptions\InvalidAmountException;
 final class AmountValidator
 {
     private const MIN_AMOUNT = 0.01;
+
     private const MAX_AMOUNT = 999999999.99;
+
     private const RECOMMENDED_MAX = 1000000.00; // 1 million THB
 
     /**

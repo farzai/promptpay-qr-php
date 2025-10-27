@@ -95,8 +95,8 @@ final class PromptPayBuilder
      * - composer require nyholm/psr7
      * - composer require guzzlehttp/psr7
      *
-     * @param ResponseFactoryInterface|null $responseFactory PSR-17 response factory (required)
-     * @param StreamFactoryInterface|null $streamFactory PSR-17 stream factory (required)
+     * @param  ResponseFactoryInterface|null  $responseFactory  PSR-17 response factory (required)
+     * @param  StreamFactoryInterface|null  $streamFactory  PSR-17 stream factory (required)
      */
     public function toResponse(
         ?ResponseFactoryInterface $responseFactory = null,
