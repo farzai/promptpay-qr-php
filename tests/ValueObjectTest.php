@@ -1,8 +1,10 @@
 <?php
 
 use Farzai\PromptPay\Enums\QrFormat;
+use Farzai\PromptPay\Services\QrCodeBuilder;
 use Farzai\PromptPay\ValueObjects\Amount;
 use Farzai\PromptPay\ValueObjects\OutputResult;
+use Farzai\PromptPay\ValueObjects\Recipient;
 
 describe('OutputResult Value Object', function () {
     it('creates result from data uri', function () {
@@ -194,5 +196,123 @@ describe('Amount Value Object Extended', function () {
         expect($amount1)->not->toBe($amount2);
         expect($amount1->getValue())->toBe(100);
         expect($amount2->getValue())->toBe(200);
+    });
+
+    it('fromNumeric returns null for null value', function () {
+        $amount = Amount::fromNumeric(null);
+
+        expect($amount)->toBeNull();
+    });
+
+    it('fromNumeric creates amount from numeric value', function () {
+        $amount = Amount::fromNumeric(100.50);
+
+        expect($amount)->toBeInstanceOf(Amount::class);
+        expect($amount->getValue())->toBe(100.50);
+    });
+
+    it('fromNumeric creates amount from integer', function () {
+        $amount = Amount::fromNumeric(50);
+
+        expect($amount)->toBeInstanceOf(Amount::class);
+        expect($amount->getValue())->toBe(50);
+    });
+
+    it('isZero returns true for zero amount', function () {
+        $amount = Amount::from(0);
+
+        expect($amount->isZero())->toBeTrue();
+    });
+
+    it('isZero returns true for zero float amount', function () {
+        $amount = Amount::from(0.0);
+
+        expect($amount->isZero())->toBeTrue();
+    });
+
+    it('isZero returns false for non-zero amount', function () {
+        $amount = Amount::from(100);
+
+        expect($amount->isZero())->toBeFalse();
+    });
+
+    it('isPositive returns true for positive amount', function () {
+        $amount = Amount::from(100);
+
+        expect($amount->isPositive())->toBeTrue();
+    });
+
+    it('isPositive returns false for zero amount', function () {
+        $amount = Amount::from(0);
+
+        expect($amount->isPositive())->toBeFalse();
+    });
+
+    it('__toString returns formatted value', function () {
+        $amount = Amount::from(123.45);
+
+        expect((string) $amount)->toBe('123.45');
+        expect($amount->__toString())->toBe('123.45');
+    });
+
+    it('__toString formats integer amounts with decimals', function () {
+        $amount = Amount::from(100);
+
+        expect((string) $amount)->toBe('100.00');
+    });
+});
+
+describe('QrCodeResult Value Object', function () {
+    it('can get vendor result', function () {
+        $builder = QrCodeBuilder::create();
+        $result = $builder->build('test-payload', QrFormat::PNG);
+
+        $vendorResult = $result->getVendorResult();
+
+        expect($vendorResult)->toBeInstanceOf(\Endroid\QrCode\Writer\Result\ResultInterface::class);
+    });
+
+    it('can get string from qr code', function () {
+        $builder = QrCodeBuilder::create();
+        $result = $builder->build('test-payload', QrFormat::PNG);
+
+        expect($result->getString())->not->toBeEmpty();
+    });
+
+    it('can get data uri', function () {
+        $builder = QrCodeBuilder::create();
+        $result = $builder->build('test-payload', QrFormat::PNG);
+
+        $dataUri = $result->getDataUri();
+
+        expect($dataUri)->toStartWith('data:image/png');
+    });
+
+    it('can get mime type', function () {
+        $builder = QrCodeBuilder::create();
+        $result = $builder->build('test-payload', QrFormat::PNG);
+
+        expect($result->getMimeType())->toBe('image/png');
+    });
+});
+
+describe('Recipient Value Object', function () {
+    it('__toString returns normalized value', function () {
+        $recipient = Recipient::fromString('089-999-9999');
+
+        expect((string) $recipient)->toBe('0899999999');
+        expect($recipient->__toString())->toBe('0899999999');
+    });
+
+    it('__toString works for tax id', function () {
+        $recipient = Recipient::fromString('1234567890123');
+
+        expect((string) $recipient)->toBe('1234567890123');
+    });
+
+    it('__toString works for e-wallet', function () {
+        $recipient = Recipient::fromString('123456789012345');
+
+        expect((string) $recipient)->toBe('123456789012345');
     });
 });

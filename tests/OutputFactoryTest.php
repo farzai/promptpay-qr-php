@@ -139,4 +139,12 @@ describe('OutputFactory', function () {
             expect($output)->toBeInstanceOf(\Farzai\PromptPay\Contracts\OutputInterface::class);
         }
     });
+
+    it('filesystem output throws exception for path without extension', function () {
+        $factory = OutputFactory::create();
+        $output = $factory->createFilesystemOutput('/tmp/qrcode');
+
+        expect(fn () => $output->write('test-payload'))
+            ->toThrow(\Farzai\PromptPay\Exceptions\ConfigurationException::class, 'no file extension');
+    });
 });

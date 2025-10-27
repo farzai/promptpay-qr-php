@@ -98,6 +98,10 @@ describe('AmountValidator', function () {
         AmountValidator::validatePositive(0);
     })->throws(InvalidAmountException::class);
 
+    it('throws exception for amount below minimum in validatePositive', function () {
+        AmountValidator::validatePositive(0.001); // Below 0.01 minimum
+    })->throws(InvalidAmountException::class, 'too small');
+
     it('formats amount for display with thousands separator', function () {
         $formatted = AmountValidator::formatForDisplay(1234567.89);
         expect($formatted)->toBe('1,234,567.89');
