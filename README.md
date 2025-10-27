@@ -5,19 +5,14 @@
 [![codecov](https://codecov.io/gh/farzai/promptpay-qr-php/branch/main/graph/badge.svg)](https://codecov.io/gh/farzai/promptpay-qr-php)
 [![Total Downloads](https://img.shields.io/packagist/dt/farzai/promptpay.svg?style=flat-square)](https://packagist.org/packages/farzai/promptpay)
 
-A modern, type-safe PHP library for generating PromptPay QR codes. Built with clean architecture, immutable design patterns, and comprehensive validation.
+A modern, type-safe PHP library for generating PromptPay QR codes.
 
 ## Features
 
-- **Type-Safe** - Full PHP 8.1+ type hints and PHPStan Level 8 compliance
-- **Immutable** - Immutable builder pattern for predictable behavior
-- **Validated** - Comprehensive validation with helpful error messages
-- **Clean Architecture** - SOLID principles, dependency injection, factory patterns
 - **Zero Config** - Works out of the box with sensible defaults
-- **Multiple Formats** - PNG, SVG, PDF, GIF support
+- **Multiple Formats** - PNG, SVG, GIF support
 - **Amount Support** - Static or dynamic QR codes
 - **CLI Tool** - Command-line interface included
-- **Well Tested** - 57+ tests with high coverage
 
 ## Requirements
 
