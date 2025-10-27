@@ -311,12 +311,14 @@ composer format
 
 Check the `examples/` directory for real-world usage scenarios:
 
-- Basic QR code generation
-- Laravel integration
-- Symfony integration
-- Custom validation
-- Error handling
-- Batch generation
+- **01-basic-usage.php** - Basic QR code generation and builder patterns
+- **02-file-generation.php** - Saving to files with custom configurations
+- **03-error-handling.php** - Comprehensive error handling patterns
+- **04-web-integration.php** - Web form integration with HTML
+- **05-laravel-integration.php** - Laravel framework integration
+- **06-symfony-integration.php** - Symfony framework integration
+- **07-custom-validation.php** - Custom validation patterns and business rules
+- **08-batch-generation.php** - Batch processing and bulk generation
 
 ## Contributing
 
