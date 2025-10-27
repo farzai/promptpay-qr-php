@@ -20,14 +20,14 @@ it('can generate qr code', function () {
         'target' => '0899999999',
     ]);
 
-    expect($this->tester->getDisplay())->toContain(
-        <<<'EOF'
-PromptPay QR Code
-==============================================
-Recipient: 089-999-9999
-Type: Phone Number
-EOF
-    );
+    $display = $this->tester->getDisplay();
+
+    // Check for section headers
+    expect($display)->toContain('PromptPay QR Code Generation');
+
+    // Check for recipient information in table format
+    expect($display)->toContain('089-999-9999');
+    expect($display)->toContain('Phone Number');
 });
 
 it('should see amount if amount is not null', function () {
@@ -37,13 +37,12 @@ it('should see amount if amount is not null', function () {
         'amount' => 100,
     ]);
 
-    expect($this->tester->getDisplay())->toContain(
-        <<<'EOF'
-Recipient: 089-999-9999
-Type: Phone Number
-Amount: 100.00 THB
-EOF
-    );
+    $display = $this->tester->getDisplay();
+
+    // Check for recipient and amount information
+    expect($display)->toContain('089-999-9999');
+    expect($display)->toContain('Phone Number');
+    expect($display)->toContain('100.00 THB');
 });
 
 it('should ask target when target is null', function () {
@@ -67,9 +66,9 @@ it('should error when target is null after answer target with empty', function (
         'command' => $this->command->getName(),
     ]);
 
-    expect($this->tester->getDisplay())->toContain(
-        <<<'EOF'
-Please enter a receiver target, e.g., 0899999999
-EOF
-    );
+    $display = $this->tester->getDisplay();
+
+    // Check for new error format
+    expect($display)->toContain('Error: Missing recipient information');
+    expect($display)->toContain('Please provide a valid recipient');
 });

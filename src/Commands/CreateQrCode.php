@@ -11,6 +11,8 @@ use Farzai\PromptPay\ValueObjects\Amount;
 use Farzai\PromptPay\ValueObjects\QrCodeConfig;
 use Farzai\PromptPay\ValueObjects\Recipient;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -54,7 +56,16 @@ class CreateQrCode extends Command
             );
 
             if (! $targetInput) {
-                $output->writeln('<error>Please enter a receiver target, e.g., 0899999999</error>');
+                $this->displayError(
+                    $output,
+                    'Missing recipient information',
+                    'Please provide a valid recipient (phone number, tax ID, or e-wallet ID)',
+                    [
+                        'Phone Number: 10 digits (e.g., 0899999999)',
+                        'Tax ID / National ID: 13 digits (e.g., 1234567890123)',
+                        'E-Wallet ID: 15 digits (e.g., 123456789012345)',
+                    ]
+                );
 
                 return Command::FAILURE;
             }
@@ -64,7 +75,17 @@ class CreateQrCode extends Command
         try {
             $recipient = Recipient::fromString($targetInput);
         } catch (InvalidRecipientException $e) {
-            $output->writeln('<error>'.$e->getMessage().'</error>');
+            $this->displayError(
+                $output,
+                'Invalid Recipient',
+                $e->getMessage(),
+                [
+                    'Phone numbers must be exactly 10 digits',
+                    'Tax IDs / National IDs must be exactly 13 digits',
+                    'E-Wallet IDs must be exactly 15 digits',
+                    'Remove any dashes, spaces, or special characters',
+                ]
+            );
 
             return Command::FAILURE;
         }
@@ -75,7 +96,17 @@ class CreateQrCode extends Command
             try {
                 $amount = Amount::fromNumeric((float) $amountInput);
             } catch (InvalidAmountException $e) {
-                $output->writeln('<error>'.$e->getMessage().'</error>');
+                $this->displayError(
+                    $output,
+                    'Invalid Amount',
+                    $e->getMessage(),
+                    [
+                        'Amount must be a positive number',
+                        'Use decimal point for cents (e.g., 100.50)',
+                        'Maximum 2 decimal places allowed',
+                        'Leave empty for static QR (any amount)',
+                    ]
+                );
 
                 return Command::FAILURE;
             }
@@ -93,25 +124,63 @@ class CreateQrCode extends Command
             $builder = $builder->withConfig(QrCodeConfig::create($size));
         }
 
+        // Get payload for details display
+        $payload = $builder->toPayload();
+
+        // Display QR code technical details
+        $this->displayQrCodeDetails($output, $payload, $size, $format);
+
         // Handle output file option
         if ($outputFile) {
+            $this->displaySectionHeader($output, 'Generating QR Code');
+            $output->writeln('  <comment>Processing...</comment>');
+            $output->writeln('');
+
             $result = $builder->toFile($outputFile);
             $savedPath = $result->getPath() ?? $outputFile;
-            $output->writeln("<info>QR code saved to: {$savedPath}</info>");
-            $output->writeln('');
+
+            // Display success message with file details
+            if (file_exists($savedPath)) {
+                $fileSize = filesize($savedPath);
+                $fileSizeFormatted = $this->formatFileSize($fileSize !== false ? $fileSize : 0);
+                $absolutePath = realpath($savedPath);
+
+                $this->displaySectionHeader($output, 'QR Code Generated Successfully');
+
+                $table = $this->createInfoTable($output);
+                $table->setRows([
+                    $this->formatInfoRow('Status', '<fg=green>✓ Success</>'),
+                    new TableSeparator,
+                    $this->formatInfoRow('File Path', $absolutePath ?: $savedPath),
+                    new TableSeparator,
+                    $this->formatInfoRow('File Size', $fileSizeFormatted),
+                    new TableSeparator,
+                    $this->formatInfoRow('Format', strtoupper(pathinfo($savedPath, PATHINFO_EXTENSION))),
+                ]);
+                $table->render();
+                $output->writeln('');
+            } else {
+                $output->writeln($this->formatSuccess("QR code saved to: {$savedPath}"));
+                $output->writeln('');
+            }
         } else {
             // Display QR code in console
+            $this->displaySectionHeader($output, 'QR Code');
+            $output->writeln('');
             $builder->toConsole($output);
             $output->writeln('');
         }
 
-        // Show payload if requested
+        // Show full payload if requested
         if ($showPayload) {
-            $payload = $builder->toPayload();
-            $output->writeln('<comment>Raw Payload:</comment>');
-            $output->writeln($payload);
+            $this->displaySectionHeader($output, 'Raw PromptPay Payload');
+            $output->writeln('');
+            $output->writeln("  <fg=yellow>{$payload}</>");
             $output->writeln('');
         }
+
+        // Display summary and tips
+        $this->displaySummary($output, $amount, (bool) $outputFile);
 
         return Command::SUCCESS;
     }
@@ -121,23 +190,124 @@ class CreateQrCode extends Command
      */
     private function displayHeader(OutputInterface $output, Recipient $recipient, ?Amount $amount): void
     {
-        $lines = [
-            '<info>PromptPay QR Code</info>',
-            '==============================================',
-            sprintf('Recipient: %s', $recipient->getDisplayValue()),
-            sprintf('Type: %s', $this->getRecipientTypeLabel($recipient)),
+        $this->displaySectionHeader($output, 'PromptPay QR Code Generation');
+
+        $table = $this->createInfoTable($output);
+
+        $rows = [
+            $this->formatInfoRow('Recipient', $recipient->getDisplayValue()),
+            new TableSeparator,
+            $this->formatInfoRow('Recipient Type', $this->getRecipientTypeLabel($recipient)),
+            new TableSeparator,
         ];
 
         if ($amount !== null) {
-            $lines[] = sprintf('Amount: %s THB', $amount->getDisplayValue());
+            $rows[] = $this->formatInfoRow('Amount', $amount->getDisplayValue().' THB');
+            $rows[] = new TableSeparator;
+            $rows[] = $this->formatInfoRow('QR Type', '<fg=green>Dynamic</> (Fixed Amount)');
         } else {
-            $lines[] = 'Amount: Static QR (any amount)';
+            $rows[] = $this->formatInfoRow('Amount', '<fg=cyan>Any Amount</>');
+            $rows[] = new TableSeparator;
+            $rows[] = $this->formatInfoRow('QR Type', '<fg=blue>Static</> (Flexible Amount)');
         }
 
-        $lines[] = '==============================================';
-        $lines[] = '';
+        $table->setRows($rows);
+        $table->render();
 
-        $output->writeln($lines);
+        $output->writeln('');
+    }
+
+    /**
+     * Display QR code technical details
+     */
+    private function displayQrCodeDetails(OutputInterface $output, string $payload, int $size, string $format): void
+    {
+        $this->displaySectionHeader($output, 'QR Code Details');
+
+        $table = $this->createInfoTable($output);
+
+        $payloadLength = strlen($payload);
+        $payloadPreview = substr($payload, 0, 40).'...'.substr($payload, -10);
+
+        $table->setRows([
+            $this->formatInfoRow('Payload Length', $payloadLength.' characters'),
+            new TableSeparator,
+            $this->formatInfoRow('QR Code Size', $size.' × '.$size.' pixels'),
+            new TableSeparator,
+            $this->formatInfoRow('Output Format', strtoupper($format)),
+            new TableSeparator,
+            $this->formatInfoRow('Error Correction', 'Level L (7% damage tolerance)'),
+            new TableSeparator,
+            $this->formatInfoRow('Payload Preview', $payloadPreview),
+        ]);
+
+        $table->render();
+        $output->writeln('');
+    }
+
+    /**
+     * Display summary with helpful tips
+     */
+    private function displaySummary(OutputInterface $output, ?Amount $amount, bool $savedToFile): void
+    {
+        $this->displaySectionHeader($output, 'Summary & Next Steps');
+
+        $output->writeln('  <fg=green>✓</> QR code has been generated successfully');
+        $output->writeln('');
+
+        // Display tips based on QR type
+        if ($amount !== null) {
+            $output->writeln('  <fg=cyan>💡 Tips for Dynamic QR Codes (Fixed Amount):</>');
+            $output->writeln('  • This QR code is for a specific amount of <fg=white;options=bold>'.$amount->getDisplayValue().' THB</>');
+            $output->writeln('  • Payer cannot change the amount when scanning');
+            $output->writeln('  • Perfect for invoices, fixed-price items, or bills');
+        } else {
+            $output->writeln('  <fg=cyan>💡 Tips for Static QR Codes (Flexible Amount):</>');
+            $output->writeln('  • Payer can enter any amount when scanning');
+            $output->writeln('  • Reusable for multiple transactions');
+            $output->writeln('  • Ideal for donations, tips, or variable payments');
+        }
+
+        $output->writeln('');
+
+        // Display integration tips
+        if ($savedToFile) {
+            $output->writeln('  <fg=yellow>📱 How to use this QR code:</>');
+            $output->writeln('  • Print it on receipts, invoices, or flyers');
+            $output->writeln('  • Display it on your website or app');
+            $output->writeln('  • Share it via email or messaging apps');
+        } else {
+            $output->writeln('  <fg=yellow>📱 How to test this QR code:</>');
+            $output->writeln('  • Open any Thai banking app with PromptPay support');
+            $output->writeln('  • Scan the QR code displayed above');
+            $output->writeln('  • Verify the recipient and amount details');
+        }
+
+        $output->writeln('');
+        $output->writeln('  <fg=gray>For more options, run:</> <fg=white;options=bold>php bin/promptpay --help</>');
+        $output->writeln('');
+    }
+
+    /**
+     * Display a formatted error message with helpful suggestions
+     *
+     * @param  string[]  $suggestions
+     */
+    private function displayError(OutputInterface $output, string $title, string $message, array $suggestions = []): void
+    {
+        $output->writeln('');
+        $output->writeln('  <fg=red;options=bold>✗ Error: '.$title.'</>');
+        $output->writeln('  <fg=red>'.$message.'</>');
+
+        if (! empty($suggestions)) {
+            $output->writeln('');
+            $output->writeln('  <fg=yellow>Suggestions:</>');
+            foreach ($suggestions as $suggestion) {
+                $output->writeln('  <fg=gray>•</> '.$suggestion);
+            }
+        }
+
+        $output->writeln('');
     }
 
     /**
@@ -206,5 +376,66 @@ HELP;
         return $helper->ask(
             $input, $output, new Question("Enter {$question}: ")
         );
+    }
+
+    /**
+     * Display a styled section header with border
+     */
+    private function displaySectionHeader(OutputInterface $output, string $title): void
+    {
+        $length = mb_strlen($title) + 4;
+        $border = str_repeat('─', $length);
+
+        $output->writeln('');
+        $output->writeln("<fg=cyan>┌{$border}┐</>");
+        $output->writeln("<fg=cyan>│</> <fg=cyan;options=bold>{$title}</> <fg=cyan>│</>");
+        $output->writeln("<fg=cyan>└{$border}┘</>");
+    }
+
+    /**
+     * Create a styled table for displaying key-value information
+     */
+    private function createInfoTable(OutputInterface $output): Table
+    {
+        $table = new Table($output);
+        $table->setStyle('compact');
+        $table->setColumnWidths([20, 50]);
+
+        return $table;
+    }
+
+    /**
+     * Format a success message with icon
+     */
+    private function formatSuccess(string $message): string
+    {
+        return "<fg=green>✓</> <info>{$message}</info>";
+    }
+
+    /**
+     * Format an info label with value
+     *
+     * @return array{string, string}
+     */
+    private function formatInfoRow(string $label, string $value): array
+    {
+        return [
+            "<fg=yellow>{$label}</>",
+            "<fg=white;options=bold>{$value}</>",
+        ];
+    }
+
+    /**
+     * Format file size in human-readable format
+     */
+    private function formatFileSize(int $bytes): string
+    {
+        $units = ['B', 'KB', 'MB', 'GB'];
+        $bytes = max($bytes, 0);
+        $pow = floor(($bytes ? log($bytes) : 0) / log(1024));
+        $pow = min($pow, count($units) - 1);
+        $bytes /= (1 << (10 * $pow));
+
+        return round($bytes, 2).' '.$units[$pow];
     }
 }
